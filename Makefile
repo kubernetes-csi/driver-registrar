@@ -14,8 +14,12 @@
 
 .PHONY: all driver-registrar clean test
 
-IMAGE_NAME=quay.io/k8scsi/driver-registrar
+REGISTRY_NAME=quay.io/k8scsi
+IMAGE_NAME=driver-registrar
 IMAGE_VERSION=canary
+IMAGE_TAG=$(REGISTRY_NAME)/$(IMAGE_NAME):$(IMAGE_VERSION)
+
+REV=$(shell git describe --long --match='v*' --dirty)
 
 ifdef V
 TESTARGS = -v -args -alsologtostderr -v 5
@@ -28,17 +32,17 @@ all: driver-registrar
 
 driver-registrar:
 	mkdir -p bin
-	CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' -o ./bin/driver-registrar ./cmd/driver-registrar
+	CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-X main.version=$(REV) -extldflags "-static"' -o ./bin/driver-registrar ./cmd/driver-registrar
 
 clean:
 	rm -rf bin deploy/docker/driver-registrar
 
 container: driver-registrar
 	cp bin/driver-registrar deploy/docker
-	docker build -t $(IMAGE_NAME):$(IMAGE_VERSION) deploy/docker
+	docker build -t $(IMAGE_TAG) deploy/docker
 
 push: container
-	docker push $(IMAGE_NAME):$(IMAGE_VERSION)
+	docker push $(IMAGE_TAG)
 
 test:
 	go test `go list ./... | grep -v 'vendor'` $(TESTARGS)
