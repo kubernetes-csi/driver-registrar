@@ -200,7 +200,7 @@ func getVerifyAndAddNodeId(
 			if val == csiDriverNodeId {
 				// Value already exists in node annotation, nothing more to do
 				glog.V(1).Infof(
-					"The key value {%q: %q} alredy eixst in node %q annotation, no need to update: %v",
+					"The key value {%q: %q} already exist in node %q annotation, no need to update: %v",
 					csiDriverName,
 					csiDriverNodeId,
 					annotationKey,
