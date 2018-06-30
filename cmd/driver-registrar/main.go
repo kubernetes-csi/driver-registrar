@@ -129,7 +129,7 @@ func main() {
 
 	// Once https://github.com/container-storage-interface/spec/issues/159 is
 	// resolved, if plugin does not support PUBLISH_UNPUBLISH_VOLUME, then we
-	// can skip adding mappting to "csi.volume.kubernetes.io/nodeid" annotation.
+	// can skip adding mapping to "csi.volume.kubernetes.io/nodeid" annotation.
 
 	// Connect to CSI.
 	glog.V(1).Infof("Attempting to open a gRPC connection with: %q", csiAddress)
@@ -235,7 +235,7 @@ func main() {
 	// This program is intended to run as a side-car container inside a
 	// Kubernetes DaemonSet. Kubernetes DaemonSet only have one RestartPolicy,
 	// always, meaning as soon as this container terminates, it will be started
-	// again. Therefore, this program will loop indefientley and periodically
+	// again. Therefore, this program will loop indefinitely and periodically
 	// update the node annotation.
 	// The CSI driver name and node ID are assumed to be immutable, and are not
 	// refetched on subsequent loop iterations.
@@ -359,7 +359,7 @@ func getVerifyAndDeleteNodeId(
 
 		existingDriverMap := map[string]string{}
 		if previousAnnotationValue == "" {
-			// Value already exists in node annotation, nothing more to do
+			// The annotationKey does not exist in node annotation, nothing more to do
 			glog.V(1).Infof(
 				"The key %q does not exist in node %q annotation, no need to cleanup.",
 				csiDriverName,
@@ -377,7 +377,7 @@ func getVerifyAndDeleteNodeId(
 		}
 
 		if _, ok := existingDriverMap[csiDriverName]; !ok {
-			// Value already exists in node annotation, nothing more to do
+			// Value does not exists in node annotation, nothing more to do
 			glog.V(1).Infof(
 				"The key %q does not eixst in node %q annotation, no need to cleanup: %v",
 				csiDriverName,
@@ -386,7 +386,7 @@ func getVerifyAndDeleteNodeId(
 			return nil
 		}
 
-		// Add/update annotation value
+		// Delete/update annotation value
 		delete(existingDriverMap, csiDriverName)
 		jsonObj, err := json.Marshal(existingDriverMap)
 		if err != nil {

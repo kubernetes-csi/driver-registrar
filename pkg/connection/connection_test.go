@@ -134,7 +134,7 @@ func TestGetPluginInfo(t *testing.T) {
 			name: "success",
 			output: &csi.GetPluginInfoResponse{
 				Name:          "csi/example",
-				VendorVersion: "0.2.0",
+				VendorVersion: "0.3.0",
 				Manifest: map[string]string{
 					"hello": "world",
 				},
