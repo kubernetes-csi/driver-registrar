@@ -42,23 +42,27 @@ const (
 	// Verify (and update, if needed) the node ID at this freqeuency.
 	sleepDuration = 2 * time.Minute
 
-	modeNodeRegister = "node-register"
-	modeKubeRegister = "kubernetes-register"
-	defaultMode      = modeNodeRegister
+	modeNodeRegister          = "node-register"
+	modeKubeRegister          = "kubernetes-register"
+	modePluginWatcherRegister = "pluginwatcher-register"
+	defaultMode               = modeNodeRegister
 )
 
 // Command line flags
 var (
 	kubeconfig = flag.String("kubeconfig", "", "Absolute path to the kubeconfig file. Required only when running out of cluster.")
-	runMode    = flag.String("mode", defaultMode, "Mode to run the program. Supported modes: node-register, kubernetes-register.\n"+
+	runMode    = flag.String("mode", defaultMode, "Mode to run the program. Supported modes: "+modeNodeRegister+", "+modeKubeRegister+
+		" and "+modePluginWatcherRegister+".\n"+
 		"In "+modeNodeRegister+" mode, the program will register the CSI driver with the "+
 		"node, setting up the node information accordingly.\n"+
 		"In "+modeKubeRegister+" mode, the program will register the driver with "+
 		"Kubernetes. In this mode this program will setup all the necessary information "+
 		"to register the CSI driver with Kubernetes. This mode requires that this "+
-		"container be run in a StateFul set of 1, and not in a DaemonSet.")
+		"container be run in a StateFul set of 1, and not in a DaemonSet.\n"+
+		"In "+modePluginWatcherRegister+" mode, the program will create the CSIDriver CRD object and register"+
+		"the driver using kubelet's pluginwatcher infrastructure. Requires --kubelet-registration-path.")
 	k8sAttachmentRequired = flag.Bool("driver-requires-attachment",
-		true,
+		false,
 		"Indicates this CSI volume driver requires an attach operation (because it "+
 			"implements the CSI ControllerPublishVolume() method), and that Kubernetes "+
 			"should call attach and wait for any attach operation to complete before "+
@@ -175,6 +179,8 @@ func main() {
 		nodeRegister(config, csiConn, csiDriverName)
 	case modeKubeRegister:
 		kubernetesRegister(config, csiConn, csiDriverName)
+	case modePluginWatcherRegister:
+		pluginWatcherRegister(config, csiConn, csiDriverName)
 	default:
 		glog.Errorf("Unknown mode: %s", *runMode)
 		fmt.Fprintf(os.Stderr, "Unknown mode: %s", *runMode)
