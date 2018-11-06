@@ -12,22 +12,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-.PHONY: all driver-registrar clean test
+.PHONY: all app clean
+
+REGISTRY_NAME=quay.io/k8scsi
+IMAGE_NAME=driver-node-registrar
+IMAGE_VERSION=canary
+IMAGE_TAG=$(REGISTRY_NAME)/$(IMAGE_NAME):$(IMAGE_VERSION)
+APP=$(IMAGE_NAME)
+
+REV=$(shell git describe --long --tags --match='v*' --dirty)
+
+ifdef V
+TESTARGS = -v -args -alsologtostderr -v 5
+else
+TESTARGS =
+endif
+
 
 all: app
 
 app:
-	$(MAKE) -C cmd
+	mkdir -p bin
+	CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-X main.version=$(REV) -extldflags "-static"' -o ./bin/$(APP) .
 
 clean:
-	$(MAKE) -C cmd clean
+	rm -rf bin
 
-container:
-	$(MAKE) -C cmd container
+container: app
+	docker build -t $(IMAGE_TAG) .
 
-push:
-	$(MAKE) -C cmd push
+push: container
+	docker push $(IMAGE_TAG)
 
-test:
-	go test `go list ./... | grep -v 'vendor'` $(TESTARGS)
-	go vet `go list ./... | grep -v vendor`
