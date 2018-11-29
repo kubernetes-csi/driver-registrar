@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/container-storage-interface/spec/lib/go/csi"
 	"github.com/golang/mock/gomock"
@@ -48,7 +49,8 @@ func createMockServer(t *testing.T) (
 
 	// Create a client connection to it
 	addr := drv.Address()
-	csiConn, err := NewConnection(addr, 10)
+	t.Log("Connecting to ", addr)
+	csiConn, err := NewConnection(addr, time.Millisecond*50)
 	if err != nil {
 		return nil, nil, nil, nil, nil, nil, err
 	}
