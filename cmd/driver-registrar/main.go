@@ -58,7 +58,7 @@ var (
 		"to register the CSI driver with Kubernetes. This mode requires that this "+
 		"container be run in a StateFul set of 1, and not in a DaemonSet.")
 	k8sAttachmentRequired = flag.Bool("driver-requires-attachment",
-		true,
+		false,
 		"Indicates this CSI volume driver requires an attach operation (because it "+
 			"implements the CSI ControllerPublishVolume() method), and that Kubernetes "+
 			"should call attach and wait for any attach operation to complete before "+
