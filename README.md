@@ -1,4 +1,11 @@
 [![Build Status](https://travis-ci.org/kubernetes-csi/driver-registrar.svg?branch=master)](https://travis-ci.org/kubernetes-csi/driver-registrar)
+
+# !NOTE! !THIS REPO HAS BEEN DEPRECATED!
+Two new repos have replaced this one:
+
+* [cluster-driver-registrar](https://github.com/kubernetes-csi/cluster-driver-registrar)
+* [node-driver-registrar](https://github.com/kubernetes-csi/node-driver-registrar)
+
 # Driver Registrar
 
 A sidecar container that
