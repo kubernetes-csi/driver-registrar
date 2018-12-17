@@ -1,10 +1,12 @@
 [![Build Status](https://travis-ci.org/kubernetes-csi/driver-registrar.svg?branch=master)](https://travis-ci.org/kubernetes-csi/driver-registrar)
 
 # !NOTE! !THIS REPO HAS BEEN DEPRECATED!
-Two new repos have replaced this one:
+Two new repos have replaced this one for CSI spec 1.0 support:
 
 * [cluster-driver-registrar](https://github.com/kubernetes-csi/cluster-driver-registrar)
 * [node-driver-registrar](https://github.com/kubernetes-csi/node-driver-registrar)
+
+This repo will continue to exist for CSI spec 0.3 support.
 
 # Driver Registrar
 
