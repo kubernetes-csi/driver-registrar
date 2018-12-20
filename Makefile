@@ -16,7 +16,7 @@
 
 REGISTRY_NAME=quay.io/k8scsi
 IMAGE_NAME=driver-registrar
-IMAGE_VERSION=v0.4.1-canary
+IMAGE_VERSION=v0.4-canary
 IMAGE_TAG=$(REGISTRY_NAME)/$(IMAGE_NAME):$(IMAGE_VERSION)
 
 REV=$(shell git describe --long --tags --match='v*' --dirty)
